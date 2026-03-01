@@ -652,7 +652,7 @@
 
   // ─── Go back home (play reverse first) ───
   function goToHome() {
-    if (state !== 'video') return;
+    if (state !== 'video' && state !== 'transitioning-to-video') return;
     state = 'transitioning-to-home';
 
     mainVideo.pause();
@@ -663,6 +663,8 @@
     reverseVideo.currentTime = 0;
     reverseVideo.play();
 
+    // Remove any previous listener to avoid duplicates
+    reverseVideo.onended = null;
     reverseVideo.onended = () => {
       reverseVideo.style.display = 'none';
       showHome();
