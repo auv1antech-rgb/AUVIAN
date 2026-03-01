@@ -325,12 +325,22 @@
     height: 100%;
   }
 
+  /* overlay to hide YouTube title bar at top */
+  .video-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 80px;
+    background: #000;
+    z-index: 10;
+    pointer-events: none;
+  }
+
   #yt-player {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* 16:9 covering the viewport */
     width: 177.78vh;
     height: 100vh;
     min-width: 100%;
@@ -756,105 +766,113 @@
         controls: 0,
         loop: 1,
         playlist: 'a7UmlhIIDmY',
-        mute: 0,
+        mute: 1,
         rel: 0,
         modestbranding: 1,
         iv_load_policy: 3,
-        showinfo: 0
+        showinfo: 0,
+        disablekb: 1,
+        fs: 0
       },
       events: {
-        onReady: () => { ytReady = true; }
+        onReady: (e) => {
+          ytReady = true;
+          e.target.mute();
+        }
       }
     });
   };
 
-  // ─── Scroll snap detection ───
-  const scroller = document.getElementById('scroller');
-  let currentSection = 0;
-  let isScrolling = false;
+  // ─── Intersection Observer for smooth section detection ───
+  const sections = document.querySelectorAll('.section');
+  let currentSection = -1;
+  let animationQueued = false;
 
-  scroller.addEventListener('scroll', () => {
-    if (isScrolling) return;
-    isScrolling = true;
-    clearTimeout(isScrolling);
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const idx = Array.from(sections).indexOf(entry.target);
+      if (idx === currentSection) return;
+      currentSection = idx;
 
-    setTimeout(() => {
-      const scrollTop = scroller.scrollTop;
-      const vh = window.innerHeight;
-      const newSection = Math.round(scrollTop / vh);
-
-      if (newSection !== currentSection) {
-        if (newSection === 1) {
-          // Scrolled to video
-          if (ytReady && ytPlayer) ytPlayer.playVideo();
-        } else if (newSection === 0) {
-          // Scrolled back to home
-          if (ytReady && ytPlayer) ytPlayer.pauseVideo();
-          triggerAnimations();
+      if (idx === 1) {
+        // Video section
+        if (ytReady && ytPlayer) ytPlayer.playVideo();
+      } else if (idx === 0) {
+        // Home section
+        if (ytReady && ytPlayer) ytPlayer.pauseVideo();
+        if (!animationQueued) {
+          animationQueued = true;
+          // Wait for scroll snap to settle before re-animating
+          setTimeout(() => {
+            triggerAnimations();
+            animationQueued = false;
+          }, 400);
         }
-        currentSection = newSection;
       }
-      isScrolling = false;
-    }, 150);
-  });
+    });
+  }, { threshold: 0.6 });
+
+  sections.forEach(s => observer.observe(s));
 
   // ─── Animation system ───
   function triggerAnimations() {
-    // Reset all animated elements
     const animClasses = [
       '.anim-left', '.anim-eyebrow', '.anim-h1', '.anim-tagline',
       '.anim-cta', '.anim-bottom', '.anim-right', '.anim-device', '.anim-corner'
     ];
 
+    // 1. Strip all playing classes and inline styles instantly
     animClasses.forEach(cls => {
       const el = document.querySelector(cls);
       if (!el) return;
       el.classList.remove('playing');
-      // Force reflow
-      void el.offsetWidth;
     });
 
-    // Reset SVG paths
     document.querySelectorAll('.animated-path').forEach(p => {
       p.classList.remove('playing');
-      void p.getBoundingClientRect();
     });
 
-    // Reset dots
     document.querySelectorAll('.animated-dot').forEach(d => {
+      d.style.transition = 'none';
       d.style.opacity = '0';
     });
 
-    // Small delay then re-add playing class
+    // 2. Force a full reflow on the home section
+    const homeSection = document.querySelector('.section-home');
+    void homeSection.offsetHeight;
+
+    // 3. Re-add playing classes on next paint
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        animClasses.forEach(cls => {
-          const el = document.querySelector(cls);
-          if (el) el.classList.add('playing');
-        });
+      animClasses.forEach(cls => {
+        const el = document.querySelector(cls);
+        if (el) el.classList.add('playing');
+      });
 
-        document.querySelectorAll('.animated-path').forEach(p => {
-          p.classList.add('playing');
-        });
+      document.querySelectorAll('.animated-path').forEach(p => {
+        p.classList.add('playing');
+      });
 
-        // Stagger dots
-        const dots = document.querySelectorAll('.animated-dot');
-        const delays = [1500, 1700, 1900, 2100];
-        dots.forEach((d, i) => {
-          setTimeout(() => { d.style.opacity = '1'; }, delays[i]);
-        });
+      const dots = document.querySelectorAll('.animated-dot');
+      const delays = [1500, 1700, 1900, 2100];
+      dots.forEach((d, i) => {
+        setTimeout(() => {
+          d.style.transition = '';
+          d.style.opacity = '1';
+        }, delays[i]);
       });
     });
   }
 
   // ─── Trigger on first load ───
   window.addEventListener('load', () => {
+    currentSection = 0;
     triggerAnimations();
   });
 
   // ─── Scroll hint click ───
   document.getElementById('scrollHint').addEventListener('click', () => {
-    scroller.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    document.getElementById('scroller').scrollTo({ top: window.innerHeight, behavior: 'smooth' });
   });
 
   // ─── Modals ───
