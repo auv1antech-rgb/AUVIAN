@@ -468,7 +468,7 @@
   background: #1a1917;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 48px;
+  gap: 40px;
   cursor: pointer;
   transition: opacity 0.8s ease;
 ">
@@ -477,41 +477,53 @@
     <p style="
       font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
-      font-size: 2.2rem;
-      letter-spacing: 0.45em;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      letter-spacing: 0.55em;
       text-transform: uppercase;
       color: #f7f7f5;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      line-height: 1;
     ">Auvian</p>
     <p style="
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.3em;
+      font-size: clamp(0.6rem, 1.2vw, 0.72rem);
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: rgba(155,150,144,0.6);
+      color: rgba(155,150,144,0.7);
     ">Precisión en cada detalle.</p>
   </div>
 
-  <!-- Pulse dot -->
+  <!-- Divider line -->
   <div style="
-    width: 1px; height: 48px;
-    background: linear-gradient(to bottom, transparent, rgba(155,150,144,0.4), transparent);
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(155,150,144,0.5), transparent);
   "></div>
 
-  <!-- Enter text -->
-  <p style="
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: rgba(155,150,144,0.5);
-    animation: entryPulse 2.2s ease-in-out infinite;
-  ">· entrar ·</p>
+  <!-- Enter button -->
+  <div style="
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  ">
+    <p style="
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(0.62rem, 1vw, 0.72rem);
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: rgba(247,247,245,0.75);
+      animation: entryPulse 2.2s ease-in-out infinite;
+    ">· entrar ·</p>
+    <p style="
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(155,150,144,0.35);
+    ">toca en cualquier parte</p>
+  </div>
 </div>
 
 <style>
   @keyframes entryPulse {
-    0%, 100% { opacity: 0.35; }
+    0%, 100% { opacity: 0.5; }
     50%       { opacity: 1; }
   }
 </style>
@@ -709,14 +721,25 @@
 
     // Play audio with fade-in
     bgAudio.volume = 0;
-    bgAudio.play().then(() => {
-      let vol = 0;
-      const fadeIn = setInterval(() => {
-        vol = Math.min(vol + 0.04, 0.85);
-        bgAudio.volume = vol;
-        if (vol >= 0.85) clearInterval(fadeIn);
-      }, 60);
-    }).catch(() => {});
+    const playPromise = bgAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+          vol = Math.min(vol + 0.04, 0.85);
+          bgAudio.volume = vol;
+          if (vol >= 0.85) clearInterval(fadeIn);
+        }, 60);
+      }).catch((err) => {
+        console.error('Audio error:', err.message);
+        // Show error briefly on screen for debugging
+        const dbg = document.createElement('div');
+        dbg.style.cssText = 'position:fixed;bottom:10px;left:10px;background:red;color:white;padding:8px;font-size:11px;z-index:9999;font-family:monospace';
+        dbg.textContent = 'Audio error: ' + err.message;
+        document.body.appendChild(dbg);
+        setTimeout(() => dbg.remove(), 6000);
+      });
+    }
 
     // Trigger page animations
     triggerAnimations();
