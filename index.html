@@ -275,6 +275,119 @@
     to { stroke-dashoffset: 0; }
   }
 
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,25,23,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--white);
+    width: 360px;
+    padding: 44px 40px 36px;
+    position: relative;
+    transform: translateY(18px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .modal-overlay.open .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--light-gray);
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: color 0.2s;
+    padding: 4px;
+  }
+
+  .modal-close:hover { color: var(--near-black); }
+
+  .modal-eyebrow {
+    font-size: 0.58rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    margin-bottom: 10px;
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.9rem;
+    color: var(--near-black);
+    margin-bottom: 32px;
+    line-height: 1.1;
+  }
+
+  .modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modal-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    text-decoration: none;
+    border: 1px solid var(--off-white);
+    color: var(--near-black);
+    transition: border-color 0.25s, background 0.25s;
+  }
+
+  .modal-option:hover {
+    border-color: var(--accent);
+    background: var(--off-white);
+  }
+
+  .modal-option-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-option-text {}
+  .modal-option-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--near-black);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .modal-option-sub {
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    color: var(--mid-gray);
+  }
+
   .animated-path {
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
@@ -307,8 +420,7 @@
       <h1>Where devices<br>come back to <em>life.</em></h1>
       <p class="tagline">Precision in every detail.</p>
       <div class="cta-row">
-        <a href="#" class="cta-btn">Contactar</a>
-        <a href="#" class="cta-link">Ver servicios</a>
+        <a href="#" class="cta-btn" id="openModal">Contactar</a>
       </div>
     </div>
 
@@ -316,7 +428,6 @@
       <ul class="services-list">
         <li>Celulares</li>
         <li>Computadoras</li>
-        <li>Tablets</li>
       </ul>
     </div>
   </div>
@@ -379,10 +490,64 @@
     <div class="corner-label">
       <p>Servicio profesional</p>
       <p>Diagnóstico gratuito</p>
-
     </div>
   </div>
 
+
 </div>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">&#10005;</button>
+    <p class="modal-eyebrow">Contáctanos</p>
+    <h2 class="modal-title">¿Cómo quieres<br>comunicarte?</h2>
+    <div class="modal-options">
+
+      <a class="modal-option" href="https://www.instagram.com/auv1an/" target="_blank" rel="noopener">
+        <div class="modal-option-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="20" height="20" rx="6" stroke="#3a3835" stroke-width="1.5"/>
+            <circle cx="12" cy="12" r="4" stroke="#3a3835" stroke-width="1.5"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="#3a3835"/>
+          </svg>
+        </div>
+        <div class="modal-option-text">
+          <span class="modal-option-label">Instagram</span>
+          <span class="modal-option-sub">@auv1an</span>
+        </div>
+      </a>
+
+      <a class="modal-option" href="https://wa.me/529934059269" target="_blank" rel="noopener">
+        <div class="modal-option-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.41A9.957 9.957 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" stroke="#3a3835" stroke-width="1.5" fill="none"/>
+            <path d="M8.5 9.5c.5 1 1.5 3 3.5 4s3-1 3-1-.5-1.5-1-1.5-1.5.5-1.5.5S11 10.5 10 9.5 9 8 9 8 8 8.5 8.5 9.5z" stroke="#3a3835" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="modal-option-text">
+          <span class="modal-option-label">WhatsApp</span>
+          <span class="modal-option-sub">+52 993 405 9269</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('contactModal');
+  const openBtn = document.getElementById('openModal');
+  const closeBtn = document.getElementById('modalClose');
+
+  openBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    modal.classList.add('open');
+  });
+
+  closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('open'); });
+</script>
 </body>
 </html>
