@@ -163,6 +163,7 @@
     border-bottom: 1px solid transparent;
     padding-bottom: 2px;
     transition: color 0.3s, border-color 0.3s;
+    cursor: pointer;
   }
 
   .cta-link:hover {
@@ -206,7 +207,6 @@
       radial-gradient(ellipse at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%);
   }
 
-  /* Geometric decorative lines */
   .geo-lines {
     position: absolute;
     inset: 0;
@@ -217,7 +217,6 @@
     height: 100%;
   }
 
-  /* Device icon */
   .device-wrap {
     position: absolute;
     inset: 0;
@@ -231,7 +230,6 @@
     animation: scaleIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
   }
 
-  /* Corner label */
   .corner-label {
     position: absolute;
     bottom: 52px;
@@ -288,7 +286,7 @@
     to { stroke-dashoffset: 0; }
   }
 
-  /* ─── MODAL ─── */
+  /* ─── SHARED MODAL BASE ─── */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -310,7 +308,7 @@
 
   .modal {
     background: var(--white);
-    width: 360px;
+    width: 400px;
     padding: 44px 40px 36px;
     position: relative;
     transform: translateY(18px) scale(0.97);
@@ -354,6 +352,7 @@
     line-height: 1.1;
   }
 
+  /* ─── CONTACT MODAL ─── */
   .modal-options {
     display: flex;
     flex-direction: column;
@@ -385,7 +384,6 @@
     justify-content: center;
   }
 
-  .modal-option-text {}
   .modal-option-label {
     font-size: 0.75rem;
     letter-spacing: 0.15em;
@@ -395,10 +393,73 @@
     display: block;
     margin-bottom: 2px;
   }
+
   .modal-option-sub {
     font-size: 0.65rem;
     letter-spacing: 0.05em;
     color: var(--mid-gray);
+  }
+
+  /* ─── SERVICES MODAL ─── */
+  .svc-modal .modal {
+    width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .svc-section {
+    margin-bottom: 28px;
+  }
+
+  .svc-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .svc-section-title {
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--off-white);
+  }
+
+  .svc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .svc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--off-white);
+  }
+
+  .svc-item-icon {
+    font-size: 0.9rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .svc-item-text {
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+    color: var(--dark-gray);
+    line-height: 1.4;
+  }
+
+  .svc-item-text strong {
+    display: block;
+    font-weight: 500;
+    color: var(--near-black);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
   }
 
   .animated-path {
@@ -418,6 +479,8 @@
     .left { padding: 40px 32px; min-height: 100vh; }
     .right { height: 50vh; }
     .divider-line { display: none; }
+    .svc-modal .modal { width: 95vw; }
+    .svc-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -434,7 +497,7 @@
       <p class="tagline">Precisión en cada detalle.</p>
       <div class="cta-row">
         <a href="#" class="cta-btn" id="openModal">Contactar</a>
-        <a href="#" class="cta-link">Ver servicios</a>
+        <a href="#" class="cta-link" id="openServices">Ver servicios</a>
       </div>
     </div>
 
@@ -455,15 +518,12 @@
 
     <div class="geo-lines">
       <svg viewBox="0 0 600 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <!-- Abstract circuit / precision lines -->
         <path class="animated-path" d="M100 200 L180 200 L180 140 L380 140 L380 200 L500 200" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
         <path class="animated-path" d="M60 350 L200 350 L200 420 L420 420 L420 350 L560 350" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" style="animation-delay:1.1s"/>
         <path class="animated-path" d="M300 80 L300 720" stroke="rgba(255,255,255,0.08)" stroke-width="1" style="animation-delay:1.3s"/>
         <path class="animated-path" d="M150 500 L150 600 L450 600 L450 500" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" style="animation-delay:1.5s"/>
-        <!-- corner accents -->
         <rect x="40" y="40" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none" class="animated-path" style="animation-delay:1.8s"/>
         <rect x="500" y="700" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none" class="animated-path" style="animation-delay:2s"/>
-        <!-- small dots -->
         <circle cx="180" cy="200" r="4" fill="rgba(255,255,255,0.45)" opacity="0" style="animation: fadeIn 0.3s ease 1.5s forwards;"/>
         <circle cx="380" cy="140" r="4" fill="rgba(255,255,255,0.45)" opacity="0" style="animation: fadeIn 0.3s ease 1.7s forwards;"/>
         <circle cx="200" cy="420" r="4" fill="rgba(255,255,255,0.35)" opacity="0" style="animation: fadeIn 0.3s ease 1.9s forwards;"/>
@@ -474,29 +534,20 @@
     <div class="device-wrap">
       <div class="device-icon">
         <svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Phone outline -->
           <rect x="45" y="10" width="90" height="160" rx="14" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
           <rect x="55" y="22" width="70" height="116" rx="4" stroke="rgba(255,255,255,0.25)" stroke-width="1" fill="rgba(255,255,255,0.05)"/>
-          <!-- Home bar -->
           <rect x="72" y="152" width="36" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
-          <!-- Screen content lines -->
           <line x1="65" y1="50" x2="115" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
           <line x1="65" y1="62" x2="95" y2="62" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
           <rect x="65" y="78" width="50" height="36" rx="3" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
-          <!-- Wrench icon inside screen -->
           <path d="M82 88 C80 86 80 82 82 80 L85 83 L88 80 L90 82 L87 85 L90 88 L88 90 L84 90 Z" stroke="rgba(255,255,255,0.55)" stroke-width="1" fill="none"/>
           <line x1="89" y1="88" x2="96" y2="95" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- bottom lines -->
           <line x1="65" y1="124" x2="115" y2="124" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
           <line x1="65" y1="132" x2="100" y2="132" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-
-          <!-- Laptop behind / below -->
           <rect x="5" y="175" width="170" height="105" rx="6" stroke="rgba(255,255,255,0.28)" stroke-width="1" fill="none"/>
           <rect x="15" y="182" width="150" height="78" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="rgba(255,255,255,0.03)"/>
-          <!-- keyboard rows -->
           <line x1="15" y1="200" x2="165" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
           <line x1="15" y1="210" x2="165" y2="210" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
-          <!-- trackpad -->
           <rect x="70" y="215" width="40" height="26" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
         </svg>
       </div>
@@ -505,14 +556,12 @@
     <div class="corner-label">
       <p>Servicio profesional</p>
       <p class="highlight">Diagnóstico gratuito</p>
-  
     </div>
   </div>
 
-
 </div>
 
-<!-- CONTACT MODAL -->
+<!-- ─── CONTACT MODAL ─── -->
 <div class="modal-overlay" id="contactModal">
   <div class="modal">
     <button class="modal-close" id="modalClose" aria-label="Cerrar">&#10005;</button>
@@ -529,7 +578,7 @@
           </svg>
         </div>
         <div class="modal-option-text">
-          <span class="modal-option-label">Envianos un DM por Instagram</span>
+          <span class="modal-option-label">Envíanos un DM por Instagram</span>
           <span class="modal-option-sub">@auv1an</span>
         </div>
       </a>
@@ -542,7 +591,7 @@
           </svg>
         </div>
         <div class="modal-option-text">
-          <span class="modal-option-label">Envianos Mensaje por WhatsApp</span>
+          <span class="modal-option-label">Envíanos mensaje por WhatsApp</span>
           <span class="modal-option-sub">+52 993 405 9269</span>
         </div>
       </a>
@@ -551,21 +600,94 @@
   </div>
 </div>
 
+<!-- ─── SERVICES MODAL ─── -->
+<div class="modal-overlay svc-modal" id="servicesModal">
+  <div class="modal">
+    <button class="modal-close" id="servicesClose" aria-label="Cerrar">&#10005;</button>
+    <p class="modal-eyebrow">Lo que hacemos</p>
+    <h2 class="modal-title">Nuestros<br>servicios.</h2>
+
+    <!-- CELULARES -->
+    <div class="svc-section">
+      <p class="svc-section-title">Celulares</p>
+      <div class="svc-grid">
+        <div class="svc-item">
+          <span class="svc-item-icon">📱</span>
+          <div class="svc-item-text"><strong>Cambio de pantalla</strong>Rotura, manchas o táctil sin respuesta</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🔋</span>
+          <div class="svc-item-text"><strong>Cambio de batería</strong>Batería que no carga o dura poco</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🔌</span>
+          <div class="svc-item-text"><strong>Puerto de carga</strong>No carga o carga intermitente</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🔇</span>
+          <div class="svc-item-text"><strong>Bocina / micrófono</strong>Sin sonido o no se escucha al hablar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPUTADORAS -->
+    <div class="svc-section">
+      <p class="svc-section-title">Computadoras y Laptops</p>
+      <div class="svc-grid">
+        <div class="svc-item">
+          <span class="svc-item-icon">🪟</span>
+          <div class="svc-item-text"><strong>Instalación de Windows</strong>Windows 10 u 11 limpio y activado</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">📄</span>
+          <div class="svc-item-text"><strong>Instalación de Office</strong>Word, Excel, PowerPoint y más</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🐌</span>
+          <div class="svc-item-text"><strong>PC lenta</strong>Limpieza, optimización y formateo</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🖥️</span>
+          <div class="svc-item-text"><strong>Cambio de pantalla</strong>Laptop con pantalla rota o sin imagen</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🔋</span>
+          <div class="svc-item-text"><strong>Batería de laptop</strong>No retiene carga o no enciende</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🌡️</span>
+          <div class="svc-item-text"><strong>Sobrecalentamiento</strong>Limpieza de polvo y cambio de pasta térmica</div>
+        </div>
+        <div class="svc-item">
+          <span class="svc-item-icon">🦠</span>
+          <div class="svc-item-text"><strong>Virus y malware</strong>Eliminación y protección del equipo</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
+  // Contact modal
   const modal = document.getElementById('contactModal');
-  const openBtn = document.getElementById('openModal');
-  const closeBtn = document.getElementById('modalClose');
+  document.getElementById('openModal').addEventListener('click', e => { e.preventDefault(); modal.classList.add('open'); });
+  document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
-  openBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    modal.classList.add('open');
+  // Services modal
+  const svcModal = document.getElementById('servicesModal');
+  document.getElementById('openServices').addEventListener('click', e => { e.preventDefault(); svcModal.classList.add('open'); });
+  document.getElementById('servicesClose').addEventListener('click', () => svcModal.classList.remove('open'));
+  svcModal.addEventListener('click', e => { if (e.target === svcModal) svcModal.classList.remove('open'); });
+
+  // ESC closes both
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      modal.classList.remove('open');
+      svcModal.classList.remove('open');
+    }
   });
-
-  closeBtn.addEventListener('click', () => modal.classList.remove('open'));
-  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('open'); });
 </script>
 </body>
 </html>
-
-
