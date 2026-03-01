@@ -673,7 +673,7 @@
 
   // ─── Wheel / touch scroll detection ───
   let lastScrollTime = 0;
-  const SCROLL_COOLDOWN = 800;
+  const SCROLL_COOLDOWN = 400;
 
   function handleScrollDown() {
     const now = Date.now();
@@ -686,7 +686,7 @@
     const now = Date.now();
     if (now - lastScrollTime < SCROLL_COOLDOWN) return;
     lastScrollTime = now;
-    if (state === 'video') goToHome();
+    if (state === 'video' || state === 'transitioning-to-video') goToHome();
   }
 
   // Mouse wheel
