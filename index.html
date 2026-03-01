@@ -126,8 +126,9 @@
 
   .cta-row {
     display: flex;
-    align-items: center;
-    gap: 36px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     opacity: 0;
     animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
   }
@@ -497,7 +498,7 @@
       <p class="tagline">Precisión en cada detalle.</p>
       <div class="cta-row">
         <a href="#" class="cta-btn" id="openModal">Contactar</a>
-        <a href="#" class="cta-link" id="openServices">Ver servicios</a>
+        <a href="#" class="cta-btn" id="openServices">Ver servicios</a>
       </div>
     </div>
 
@@ -555,7 +556,7 @@
 
     <div class="corner-label">
       <p>Servicio profesional</p>
-      <p class="highlight">Diagnóstico gratuito</p>
+    
     </div>
   </div>
 
