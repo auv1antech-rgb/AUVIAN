@@ -20,22 +20,41 @@
 
   html, body {
     height: 100%;
-    background: var(--white);
+    background: var(--near-black);
     color: var(--near-black);
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
     overflow: hidden;
   }
 
+  /* ─── SCROLL CONTAINER ─── */
+  .scroll-container {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .scroll-container::-webkit-scrollbar { display: none; }
+  .scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ─── SECTIONS ─── */
+  .section {
+    height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+  }
+
   /* ─── GRAIN OVERLAY ─── */
-  body::before {
+  .section-home::before {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
     opacity: 0.03;
     pointer-events: none;
-    z-index: 100;
+    z-index: 10;
   }
 
   /* ─── LAYOUT ─── */
@@ -54,8 +73,7 @@
     padding: 52px 64px 52px 72px;
     position: relative;
     background: var(--white);
-    opacity: 0;
-    animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+    z-index: 1;
   }
 
   .logo {
@@ -93,8 +111,6 @@
     text-transform: uppercase;
     color: var(--mid-gray);
     margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
   }
 
   h1 {
@@ -105,8 +121,6 @@
     letter-spacing: -0.01em;
     color: var(--near-black);
     margin-bottom: 30px;
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
   }
 
   h1 em {
@@ -120,8 +134,6 @@
     text-transform: uppercase;
     color: var(--mid-gray);
     margin-bottom: 52px;
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards;
   }
 
   .cta-row {
@@ -129,8 +141,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
   }
 
   .cta-btn {
@@ -155,26 +165,7 @@
     border-color: var(--near-black);
   }
 
-  .cta-link {
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mid-gray);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    padding-bottom: 2px;
-    transition: color 0.3s, border-color 0.3s;
-    cursor: pointer;
-  }
-
-  .cta-link:hover {
-    color: var(--near-black);
-    border-color: var(--near-black);
-  }
-
   .bottom-left {
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards;
   }
 
   .services-list {
@@ -196,8 +187,6 @@
     position: relative;
     background: #272523;
     overflow: hidden;
-    opacity: 0;
-    animation: fadeIn 1.4s ease 0.2s forwards;
   }
 
   .right-bg {
@@ -226,18 +215,13 @@
     justify-content: center;
   }
 
-  .device-icon {
-    opacity: 0;
-    animation: scaleIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
-  }
+  .device-icon { }
 
   .corner-label {
     position: absolute;
     bottom: 52px;
     right: 48px;
     text-align: right;
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards;
   }
 
   .corner-label p {
@@ -264,6 +248,7 @@
     width: 1px;
     background: linear-gradient(to bottom, transparent 5%, var(--light-gray) 30%, var(--light-gray) 70%, transparent 95%);
     opacity: 0.3;
+    z-index: 2;
   }
 
   /* ─── ANIMATIONS ─── */
@@ -285,6 +270,98 @@
   @keyframes drawLine {
     from { stroke-dashoffset: 1000; }
     to { stroke-dashoffset: 0; }
+  }
+
+  /* animated state classes */
+  .anim-left { opacity: 0; }
+  .anim-left.playing { animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards; }
+
+  .anim-eyebrow { opacity: 0; }
+  .anim-eyebrow.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards; }
+
+  .anim-h1 { opacity: 0; }
+  .anim-h1.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards; }
+
+  .anim-tagline { opacity: 0; }
+  .anim-tagline.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards; }
+
+  .anim-cta { opacity: 0; }
+  .anim-cta.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards; }
+
+  .anim-bottom { opacity: 0; }
+  .anim-bottom.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards; }
+
+  .anim-right { opacity: 0; }
+  .anim-right.playing { animation: fadeIn 1.4s ease 0.2s forwards; }
+
+  .anim-device { opacity: 0; }
+  .anim-device.playing { animation: scaleIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards; }
+
+  .anim-corner { opacity: 0; }
+  .anim-corner.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards; }
+
+  .animated-path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  .animated-path.playing {
+    animation: drawLine 2.5s ease 0.8s forwards;
+  }
+  .animated-dot {
+    opacity: 0;
+  }
+
+  /* ─── VIDEO SECTION ─── */
+  .section-video {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  #yt-player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 16:9 covering the viewport */
+    width: 177.78vh;
+    height: 100vh;
+    min-width: 100%;
+    min-height: 56.25vw;
+    pointer-events: none;
+  }
+
+  /* scroll hint arrow on home section */
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    opacity: 0;
+    animation: hintFade 1s ease 2.2s forwards;
+    cursor: pointer;
+  }
+
+  @keyframes hintFade {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(6px); }
+  }
+
+  .scroll-hint svg {
+    animation: bounce 1.6s ease-in-out 3s infinite;
   }
 
   /* ─── SHARED MODAL BASE ─── */
@@ -353,7 +430,6 @@
     line-height: 1.1;
   }
 
-  /* ─── CONTACT MODAL ─── */
   .modal-options {
     display: flex;
     flex-direction: column;
@@ -408,13 +484,8 @@
     overflow-y: auto;
   }
 
-  .svc-section {
-    margin-bottom: 28px;
-  }
-
-  .svc-section:last-child {
-    margin-bottom: 0;
-  }
+  .svc-section { margin-bottom: 28px; }
+  .svc-section:last-child { margin-bottom: 0; }
 
   .svc-section-title {
     font-size: 0.58rem;
@@ -440,11 +511,7 @@
     background: var(--off-white);
   }
 
-  .svc-item-icon {
-    font-size: 0.9rem;
-    margin-top: 1px;
-    flex-shrink: 0;
-  }
+  .svc-item-icon { font-size: 0.9rem; margin-top: 1px; flex-shrink: 0; }
 
   .svc-item-text {
     font-size: 0.68rem;
@@ -463,20 +530,9 @@
     margin-bottom: 2px;
   }
 
-  .animated-path {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: drawLine 2.5s ease 0.8s forwards;
-  }
-
   /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
-    html, body { overflow: auto; }
-    .page {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-      height: auto;
-    }
+    .page { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
     .left { padding: 40px 32px; min-height: 100vh; }
     .right { height: 50vh; }
     .divider-line { display: none; }
@@ -486,77 +542,99 @@
 </style>
 </head>
 <body>
-<div class="page">
 
-  <!-- LEFT -->
-  <div class="left">
-    <div class="logo">Auvian<span></span></div>
+<div class="scroll-container" id="scroller">
 
-    <div class="main-content">
-      <p class="eyebrow">Reparación · Restauración.</p>
-      <h1>Recuperamos tecnología<br>Instalamos <em>Confianza.</em></h1>
-      <p class="tagline">Precisión en cada detalle.</p>
-      <div class="cta-row">
-        <a href="#" class="cta-btn" id="openModal">Contactar</a>
-        <a href="#" class="cta-btn" id="openServices">Ver servicios</a>
+  <!-- ══════════════ SECTION 1: HOME ══════════════ -->
+  <div class="section section-home">
+
+    <div class="page">
+      <!-- LEFT -->
+      <div class="left anim-left">
+        <div class="logo">Auvian<span></span></div>
+
+        <div class="main-content">
+          <p class="eyebrow anim-eyebrow">Reparación · Restauración.</p>
+          <h1 class="anim-h1">Recuperamos tecnología<br>Instalamos <em>Confianza.</em></h1>
+          <p class="tagline anim-tagline">Precisión en cada detalle.</p>
+          <div class="cta-row anim-cta">
+            <a href="#" class="cta-btn" id="openModal">Contactar</a>
+            <a href="#" class="cta-btn" id="openServices">Ver servicios</a>
+          </div>
+        </div>
+
+        <div class="bottom-left anim-bottom">
+          <ul class="services-list">
+            <li>Celulares</li>
+            <li>Computadoras</li>
+            <li>Tablets</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <!-- RIGHT -->
+      <div class="right anim-right">
+        <div class="right-bg"></div>
+
+        <div class="geo-lines">
+          <svg viewBox="0 0 600 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <path class="animated-path" d="M100 200 L180 200 L180 140 L380 140 L380 200 L500 200" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+            <path class="animated-path" id="p2" d="M60 350 L200 350 L200 420 L420 420 L420 350 L560 350" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"/>
+            <path class="animated-path" id="p3" d="M300 80 L300 720" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <path class="animated-path" id="p4" d="M150 500 L150 600 L450 600 L450 500" stroke="rgba(255,255,255,0.13)" stroke-width="1.5"/>
+            <rect class="animated-path" id="p5" x="40" y="40" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+            <rect class="animated-path" id="p6" x="500" y="700" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+            <circle class="animated-dot" cx="180" cy="200" r="4" fill="rgba(255,255,255,0.45)"/>
+            <circle class="animated-dot" cx="380" cy="140" r="4" fill="rgba(255,255,255,0.45)"/>
+            <circle class="animated-dot" cx="200" cy="420" r="4" fill="rgba(255,255,255,0.35)"/>
+            <circle class="animated-dot" cx="420" cy="350" r="4" fill="rgba(255,255,255,0.35)"/>
+          </svg>
+        </div>
+
+        <div class="device-wrap">
+          <div class="device-icon anim-device">
+            <svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="45" y="10" width="90" height="160" rx="14" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
+              <rect x="55" y="22" width="70" height="116" rx="4" stroke="rgba(255,255,255,0.25)" stroke-width="1" fill="rgba(255,255,255,0.05)"/>
+              <rect x="72" y="152" width="36" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+              <line x1="65" y1="50" x2="115" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+              <line x1="65" y1="62" x2="95" y2="62" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <rect x="65" y="78" width="50" height="36" rx="3" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
+              <path d="M82 88 C80 86 80 82 82 80 L85 83 L88 80 L90 82 L87 85 L90 88 L88 90 L84 90 Z" stroke="rgba(255,255,255,0.55)" stroke-width="1" fill="none"/>
+              <line x1="89" y1="88" x2="96" y2="95" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="65" y1="124" x2="115" y2="124" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+              <line x1="65" y1="132" x2="100" y2="132" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <rect x="5" y="175" width="170" height="105" rx="6" stroke="rgba(255,255,255,0.28)" stroke-width="1" fill="none"/>
+              <rect x="15" y="182" width="150" height="78" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="rgba(255,255,255,0.03)"/>
+              <line x1="15" y1="200" x2="165" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="15" y1="210" x2="165" y2="210" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+              <rect x="70" y="215" width="40" height="26" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="corner-label anim-corner">
+          <p>Servicio profesional</p>
+          <p class="highlight">Diagnóstico gratuito</p>
+        </div>
       </div>
     </div>
 
-    <div class="bottom-left">
-      <ul class="services-list">
-        <li>Celulares</li>
-        <li>Computadoras</li>
-        <li>Tablets</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="divider-line"></div>
-
-  <!-- RIGHT -->
-  <div class="right">
-    <div class="right-bg"></div>
-
-    <div class="geo-lines">
-      <svg viewBox="0 0 600 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <path class="animated-path" d="M100 200 L180 200 L180 140 L380 140 L380 200 L500 200" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-        <path class="animated-path" d="M60 350 L200 350 L200 420 L420 420 L420 350 L560 350" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" style="animation-delay:1.1s"/>
-        <path class="animated-path" d="M300 80 L300 720" stroke="rgba(255,255,255,0.08)" stroke-width="1" style="animation-delay:1.3s"/>
-        <path class="animated-path" d="M150 500 L150 600 L450 600 L450 500" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" style="animation-delay:1.5s"/>
-        <rect x="40" y="40" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none" class="animated-path" style="animation-delay:1.8s"/>
-        <rect x="500" y="700" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none" class="animated-path" style="animation-delay:2s"/>
-        <circle cx="180" cy="200" r="4" fill="rgba(255,255,255,0.45)" opacity="0" style="animation: fadeIn 0.3s ease 1.5s forwards;"/>
-        <circle cx="380" cy="140" r="4" fill="rgba(255,255,255,0.45)" opacity="0" style="animation: fadeIn 0.3s ease 1.7s forwards;"/>
-        <circle cx="200" cy="420" r="4" fill="rgba(255,255,255,0.35)" opacity="0" style="animation: fadeIn 0.3s ease 1.9s forwards;"/>
-        <circle cx="420" cy="350" r="4" fill="rgba(255,255,255,0.35)" opacity="0" style="animation: fadeIn 0.3s ease 2.1s forwards;"/>
+    <!-- scroll hint -->
+    <div class="scroll-hint" id="scrollHint">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14M5 12l7 7 7-7" stroke="rgba(100,95,90,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
 
-    <div class="device-wrap">
-      <div class="device-icon">
-        <svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="45" y="10" width="90" height="160" rx="14" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
-          <rect x="55" y="22" width="70" height="116" rx="4" stroke="rgba(255,255,255,0.25)" stroke-width="1" fill="rgba(255,255,255,0.05)"/>
-          <rect x="72" y="152" width="36" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
-          <line x1="65" y1="50" x2="115" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-          <line x1="65" y1="62" x2="95" y2="62" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-          <rect x="65" y="78" width="50" height="36" rx="3" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
-          <path d="M82 88 C80 86 80 82 82 80 L85 83 L88 80 L90 82 L87 85 L90 88 L88 90 L84 90 Z" stroke="rgba(255,255,255,0.55)" stroke-width="1" fill="none"/>
-          <line x1="89" y1="88" x2="96" y2="95" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="65" y1="124" x2="115" y2="124" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-          <line x1="65" y1="132" x2="100" y2="132" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <rect x="5" y="175" width="170" height="105" rx="6" stroke="rgba(255,255,255,0.28)" stroke-width="1" fill="none"/>
-          <rect x="15" y="182" width="150" height="78" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="rgba(255,255,255,0.03)"/>
-          <line x1="15" y1="200" x2="165" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <line x1="15" y1="210" x2="165" y2="210" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
-          <rect x="70" y="215" width="40" height="26" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
-        </svg>
-      </div>
-    </div>
+  </div>
 
-    <div class="corner-label">
-      <p>Servicio profesional</p>
-    
+  <!-- ══════════════ SECTION 2: VIDEO ══════════════ -->
+  <div class="section section-video">
+    <div class="video-wrapper">
+      <div id="yt-player"></div>
     </div>
   </div>
 
@@ -569,10 +647,9 @@
     <p class="modal-eyebrow">Contáctanos</p>
     <h2 class="modal-title">¿Cómo quieres<br>comunicarte?</h2>
     <div class="modal-options">
-
       <a class="modal-option" href="https://www.instagram.com/auv1an/" target="_blank" rel="noopener">
         <div class="modal-option-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
             <rect x="2" y="2" width="20" height="20" rx="6" stroke="#3a3835" stroke-width="1.5"/>
             <circle cx="12" cy="12" r="4" stroke="#3a3835" stroke-width="1.5"/>
             <circle cx="17.5" cy="6.5" r="1" fill="#3a3835"/>
@@ -583,10 +660,9 @@
           <span class="modal-option-sub">@auv1an</span>
         </div>
       </a>
-
       <a class="modal-option" href="https://wa.me/529934059269" target="_blank" rel="noopener">
         <div class="modal-option-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
             <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.41A9.957 9.957 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" stroke="#3a3835" stroke-width="1.5" fill="none"/>
             <path d="M8.5 9.5c.5 1 1.5 3 3.5 4s3-1 3-1-.5-1.5-1-1.5-1.5.5-1.5.5S11 10.5 10 9.5 9 8 9 8 8 8.5 8.5 9.5z" stroke="#3a3835" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
           </svg>
@@ -596,7 +672,6 @@
           <span class="modal-option-sub">+52 993 405 9269</span>
         </div>
       </a>
-
     </div>
   </div>
 </div>
@@ -608,7 +683,6 @@
     <p class="modal-eyebrow">Lo que hacemos</p>
     <h2 class="modal-title">Nuestros<br>servicios.</h2>
 
-    <!-- CELULARES -->
     <div class="svc-section">
       <p class="svc-section-title">Celulares</p>
       <div class="svc-grid">
@@ -631,7 +705,6 @@
       </div>
     </div>
 
-    <!-- COMPUTADORAS -->
     <div class="svc-section">
       <p class="svc-section-title">Computadoras y Laptops</p>
       <div class="svc-grid">
@@ -665,24 +738,136 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-  // Contact modal
+  // ─── YouTube Player ───
+  let ytPlayer = null;
+  let ytReady = false;
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player('yt-player', {
+      videoId: 'a7UmlhIIDmY',
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        loop: 1,
+        playlist: 'a7UmlhIIDmY',
+        mute: 0,
+        rel: 0,
+        modestbranding: 1,
+        iv_load_policy: 3,
+        showinfo: 0
+      },
+      events: {
+        onReady: () => { ytReady = true; }
+      }
+    });
+  };
+
+  // ─── Scroll snap detection ───
+  const scroller = document.getElementById('scroller');
+  let currentSection = 0;
+  let isScrolling = false;
+
+  scroller.addEventListener('scroll', () => {
+    if (isScrolling) return;
+    isScrolling = true;
+    clearTimeout(isScrolling);
+
+    setTimeout(() => {
+      const scrollTop = scroller.scrollTop;
+      const vh = window.innerHeight;
+      const newSection = Math.round(scrollTop / vh);
+
+      if (newSection !== currentSection) {
+        if (newSection === 1) {
+          // Scrolled to video
+          if (ytReady && ytPlayer) ytPlayer.playVideo();
+        } else if (newSection === 0) {
+          // Scrolled back to home
+          if (ytReady && ytPlayer) ytPlayer.pauseVideo();
+          triggerAnimations();
+        }
+        currentSection = newSection;
+      }
+      isScrolling = false;
+    }, 150);
+  });
+
+  // ─── Animation system ───
+  function triggerAnimations() {
+    // Reset all animated elements
+    const animClasses = [
+      '.anim-left', '.anim-eyebrow', '.anim-h1', '.anim-tagline',
+      '.anim-cta', '.anim-bottom', '.anim-right', '.anim-device', '.anim-corner'
+    ];
+
+    animClasses.forEach(cls => {
+      const el = document.querySelector(cls);
+      if (!el) return;
+      el.classList.remove('playing');
+      // Force reflow
+      void el.offsetWidth;
+    });
+
+    // Reset SVG paths
+    document.querySelectorAll('.animated-path').forEach(p => {
+      p.classList.remove('playing');
+      void p.getBoundingClientRect();
+    });
+
+    // Reset dots
+    document.querySelectorAll('.animated-dot').forEach(d => {
+      d.style.opacity = '0';
+    });
+
+    // Small delay then re-add playing class
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        animClasses.forEach(cls => {
+          const el = document.querySelector(cls);
+          if (el) el.classList.add('playing');
+        });
+
+        document.querySelectorAll('.animated-path').forEach(p => {
+          p.classList.add('playing');
+        });
+
+        // Stagger dots
+        const dots = document.querySelectorAll('.animated-dot');
+        const delays = [1500, 1700, 1900, 2100];
+        dots.forEach((d, i) => {
+          setTimeout(() => { d.style.opacity = '1'; }, delays[i]);
+        });
+      });
+    });
+  }
+
+  // ─── Trigger on first load ───
+  window.addEventListener('load', () => {
+    triggerAnimations();
+  });
+
+  // ─── Scroll hint click ───
+  document.getElementById('scrollHint').addEventListener('click', () => {
+    scroller.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  });
+
+  // ─── Modals ───
   const modal = document.getElementById('contactModal');
   document.getElementById('openModal').addEventListener('click', e => { e.preventDefault(); modal.classList.add('open'); });
   document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
   modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
-  // Services modal
   const svcModal = document.getElementById('servicesModal');
   document.getElementById('openServices').addEventListener('click', e => { e.preventDefault(); svcModal.classList.add('open'); });
   document.getElementById('servicesClose').addEventListener('click', () => svcModal.classList.remove('open'));
   svcModal.addEventListener('click', e => { if (e.target === svcModal) svcModal.classList.remove('open'); });
 
-  // ESC closes both
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       modal.classList.remove('open');
