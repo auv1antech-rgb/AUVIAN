@@ -20,34 +20,33 @@
 
   html, body {
     height: 100%;
-    background: var(--near-black);
+    background: #000;
     color: var(--near-black);
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
     overflow: hidden;
   }
 
-  /* ─── SCROLL CONTAINER ─── */
-  .scroll-container {
-    height: 100vh;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+  /* ─── TWO LAYERS: home + video, both full screen, stacked in DOM ─── */
+  /* We control which is visible manually — NO scroll snap */
+  #homeSection, #videoSection {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
-  .scroll-container::-webkit-scrollbar { display: none; }
-  .scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
+  #homeSection {
+    z-index: 2;
+  }
 
-  /* ─── SECTIONS ─── */
-  .section {
-    height: 100vh;
-    scroll-snap-align: start;
-    position: relative;
-    overflow: hidden;
+  #videoSection {
+    z-index: 1;
+    background: #000;
   }
 
   /* ─── GRAIN OVERLAY ─── */
-  .section-home::before {
+  #homeSection::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -61,7 +60,6 @@
   .page {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 100vh;
     height: 100vh;
   }
 
@@ -87,8 +85,7 @@
 
   .logo span {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     background: var(--near-black);
     border-radius: 50%;
     margin-left: 4px;
@@ -123,10 +120,7 @@
     margin-bottom: 30px;
   }
 
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  h1 em { font-style: italic; color: var(--accent); }
 
   .tagline {
     font-size: 0.78rem;
@@ -146,7 +140,6 @@
   .cta-btn {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
     background: var(--near-black);
     color: var(--white);
     text-decoration: none;
@@ -163,9 +156,6 @@
     background: transparent;
     color: var(--near-black);
     border-color: var(--near-black);
-  }
-
-  .bottom-left {
   }
 
   .services-list {
@@ -197,30 +187,17 @@
       radial-gradient(ellipse at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%);
   }
 
-  .geo-lines {
-    position: absolute;
-    inset: 0;
-  }
-
-  .geo-lines svg {
-    width: 100%;
-    height: 100%;
-  }
+  .geo-lines { position: absolute; inset: 0; }
+  .geo-lines svg { width: 100%; height: 100%; }
 
   .device-wrap {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
   }
-
-  .device-icon { }
 
   .corner-label {
     position: absolute;
-    bottom: 52px;
-    right: 48px;
+    bottom: 52px; right: 48px;
     text-align: right;
   }
 
@@ -242,9 +219,7 @@
 
   .divider-line {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
+    top: 0; bottom: 0; left: 50%;
     width: 1px;
     background: linear-gradient(to bottom, transparent 5%, var(--light-gray) 30%, var(--light-gray) 70%, transparent 95%);
     opacity: 0.3;
@@ -254,79 +229,50 @@
   /* ─── ANIMATIONS ─── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(22px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; } to { opacity: 1; }
   }
-
   @keyframes scaleIn {
     from { opacity: 0; transform: scale(0.88); }
-    to { opacity: 1; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1); }
   }
-
   @keyframes drawLine {
     from { stroke-dashoffset: 1000; }
-    to { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: 0; }
   }
 
-  /* animated state classes */
-  .anim-left { opacity: 0; }
-  .anim-left.playing { animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards; }
-
+  .anim-left    { opacity: 0; }
+  .anim-left.playing    { animation: fadeUp 1.2s cubic-bezier(0.22,1,0.36,1) 0.1s  forwards; }
   .anim-eyebrow { opacity: 0; }
-  .anim-eyebrow.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards; }
-
-  .anim-h1 { opacity: 0; }
-  .anim-h1.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards; }
-
+  .anim-eyebrow.playing { animation: fadeUp 1s   cubic-bezier(0.22,1,0.36,1) 0.45s forwards; }
+  .anim-h1      { opacity: 0; }
+  .anim-h1.playing      { animation: fadeUp 1s   cubic-bezier(0.22,1,0.36,1) 0.6s  forwards; }
   .anim-tagline { opacity: 0; }
-  .anim-tagline.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards; }
+  .anim-tagline.playing { animation: fadeUp 1s   cubic-bezier(0.22,1,0.36,1) 0.75s forwards; }
+  .anim-cta     { opacity: 0; }
+  .anim-cta.playing     { animation: fadeUp 1s   cubic-bezier(0.22,1,0.36,1) 0.9s  forwards; }
+  .anim-bottom  { opacity: 0; }
+  .anim-bottom.playing  { animation: fadeUp 1s   cubic-bezier(0.22,1,0.36,1) 1.1s  forwards; }
+  .anim-right   { opacity: 0; }
+  .anim-right.playing   { animation: fadeIn 1.4s ease 0.2s forwards; }
+  .anim-device  { opacity: 0; }
+  .anim-device.playing  { animation: scaleIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.7s forwards; }
+  .anim-corner  { opacity: 0; }
+  .anim-corner.playing  { animation: fadeUp 1s   cubic-bezier(0.22,1,0.36,1) 1.2s  forwards; }
 
-  .anim-cta { opacity: 0; }
-  .anim-cta.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards; }
-
-  .anim-bottom { opacity: 0; }
-  .anim-bottom.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards; }
-
-  .anim-right { opacity: 0; }
-  .anim-right.playing { animation: fadeIn 1.4s ease 0.2s forwards; }
-
-  .anim-device { opacity: 0; }
-  .anim-device.playing { animation: scaleIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards; }
-
-  .anim-corner { opacity: 0; }
-  .anim-corner.playing { animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards; }
-
-  .animated-path {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-  }
-  .animated-path.playing {
-    animation: drawLine 2.5s ease 0.8s forwards;
-  }
-  .animated-dot {
-    opacity: 0;
-  }
+  .animated-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+  .animated-path.playing { animation: drawLine 2.5s ease 0.8s forwards; }
+  .animated-dot  { opacity: 0; }
 
   /* ─── VIDEO SECTION ─── */
-  .section-video {
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   .video-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: 0;
     background: #000;
   }
 
-  /* overlay to hide top edge */
   .video-wrapper::before {
     content: '';
     position: absolute;
@@ -337,7 +283,6 @@
     pointer-events: none;
   }
 
-  /* overlay to hide bottom edge */
   .video-wrapper::after {
     content: '';
     position: absolute;
@@ -350,8 +295,7 @@
 
   #mainVideo, #reverseVideo {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 177.78vh;
     height: 100vh;
@@ -361,20 +305,30 @@
     pointer-events: none;
   }
 
-  #reverseVideo {
-    display: none;
+  #reverseVideo { display: none; }
+
+  /* home transition */
+  #homeSection {
+    transition: opacity 0.5s ease;
   }
 
-  /* scroll hint arrow on home section */
+  #homeSection.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* scroll hint */
   .scroll-hint {
     position: absolute;
-    bottom: 28px;
-    left: 50%;
+    bottom: 28px; left: 50%;
     transform: translateX(-50%);
     z-index: 20;
     opacity: 0;
-    animation: hintFade 1s ease 2.2s forwards;
     cursor: pointer;
+  }
+
+  .scroll-hint.visible {
+    animation: hintFade 1s ease forwards;
   }
 
   @keyframes hintFade {
@@ -387,29 +341,22 @@
     50%       { transform: translateX(-50%) translateY(6px); }
   }
 
-  .scroll-hint svg {
-    animation: bounce 1.6s ease-in-out 3s infinite;
+  .scroll-hint.bounce svg {
+    animation: bounce 1.6s ease-in-out infinite;
   }
 
-  /* ─── SHARED MODAL BASE ─── */
+  /* ─── MODALS ─── */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: rgba(26,25,23,0.55);
     backdrop-filter: blur(6px);
     z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
     transition: opacity 0.35s ease;
   }
 
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
 
   .modal {
     background: var(--white);
@@ -417,149 +364,71 @@
     padding: 44px 40px 36px;
     position: relative;
     transform: translateY(18px) scale(0.97);
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
   }
 
-  .modal-overlay.open .modal {
-    transform: translateY(0) scale(1);
-  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
 
   .modal-close {
-    position: absolute;
-    top: 18px;
-    right: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--light-gray);
-    font-size: 1.1rem;
-    line-height: 1;
-    transition: color 0.2s;
-    padding: 4px;
+    position: absolute; top: 18px; right: 20px;
+    background: none; border: none; cursor: pointer;
+    color: var(--light-gray); font-size: 1.1rem;
+    transition: color 0.2s; padding: 4px;
   }
-
   .modal-close:hover { color: var(--near-black); }
 
   .modal-eyebrow {
-    font-size: 0.58rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--mid-gray);
-    margin-bottom: 10px;
+    font-size: 0.58rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--mid-gray); margin-bottom: 10px;
   }
 
   .modal-title {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 1.9rem;
-    color: var(--near-black);
-    margin-bottom: 32px;
-    line-height: 1.1;
+    font-weight: 300; font-size: 1.9rem;
+    color: var(--near-black); margin-bottom: 32px; line-height: 1.1;
   }
 
-  .modal-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  .modal-options { display: flex; flex-direction: column; gap: 12px; }
 
   .modal-option {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 20px;
-    text-decoration: none;
-    border: 1px solid var(--off-white);
-    color: var(--near-black);
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 20px; text-decoration: none;
+    border: 1px solid var(--off-white); color: var(--near-black);
     transition: border-color 0.25s, background 0.25s;
   }
+  .modal-option:hover { border-color: var(--accent); background: var(--off-white); }
 
-  .modal-option:hover {
-    border-color: var(--accent);
-    background: var(--off-white);
-  }
-
-  .modal-option-icon {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  .modal-option-icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 
   .modal-option-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--near-black);
-    display: block;
-    margin-bottom: 2px;
+    font-size: 0.75rem; letter-spacing: 0.15em;
+    text-transform: uppercase; font-weight: 500;
+    color: var(--near-black); display: block; margin-bottom: 2px;
   }
 
-  .modal-option-sub {
-    font-size: 0.65rem;
-    letter-spacing: 0.05em;
-    color: var(--mid-gray);
-  }
+  .modal-option-sub { font-size: 0.65rem; letter-spacing: 0.05em; color: var(--mid-gray); }
 
-  /* ─── SERVICES MODAL ─── */
-  .svc-modal .modal {
-    width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
+  .svc-modal .modal { width: 480px; max-height: 90vh; overflow-y: auto; }
   .svc-section { margin-bottom: 28px; }
   .svc-section:last-child { margin-bottom: 0; }
 
   .svc-section-title {
-    font-size: 0.58rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--mid-gray);
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    font-size: 0.58rem; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--mid-gray);
+    margin-bottom: 12px; padding-bottom: 8px;
     border-bottom: 1px solid var(--off-white);
   }
 
-  .svc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-  .svc-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px 14px;
-    background: var(--off-white);
-  }
-
+  .svc-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: var(--off-white); }
   .svc-item-icon { font-size: 0.9rem; margin-top: 1px; flex-shrink: 0; }
 
-  .svc-item-text {
-    font-size: 0.68rem;
-    letter-spacing: 0.05em;
-    font-weight: 400;
-    color: var(--dark-gray);
-    line-height: 1.4;
-  }
+  .svc-item-text { font-size: 0.68rem; letter-spacing: 0.05em; font-weight: 400; color: var(--dark-gray); line-height: 1.4; }
+  .svc-item-text strong { display: block; font-weight: 500; color: var(--near-black); font-size: 0.7rem; letter-spacing: 0.08em; margin-bottom: 2px; }
 
-  .svc-item-text strong {
-    display: block;
-    font-weight: 500;
-    color: var(--near-black);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    margin-bottom: 2px;
-  }
-
-  /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
-    .page { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+    .page { grid-template-columns: 1fr; height: auto; }
     .left { padding: 40px 32px; min-height: 100vh; }
     .right { height: 50vh; }
     .divider-line { display: none; }
@@ -570,108 +439,101 @@
 </head>
 <body>
 
-<div class="scroll-container" id="scroller">
+<!-- ══════ VIDEO SECTION (behind) ══════ -->
+<div id="videoSection">
+  <div class="video-wrapper">
+    <video id="mainVideo"    src="video.mp4"     playsinline muted preload="auto"></video>
+    <video id="reverseVideo" src="invertido.mp4" playsinline muted preload="auto"></video>
+  </div>
+</div>
 
-  <!-- ══════════════ SECTION 1: HOME ══════════════ -->
-  <div class="section section-home">
+<!-- ══════ HOME SECTION (in front) ══════ -->
+<div id="homeSection">
+  <div class="page">
+    <!-- LEFT -->
+    <div class="left anim-left">
+      <div class="logo">Auvian<span></span></div>
 
-    <div class="page">
-      <!-- LEFT -->
-      <div class="left anim-left">
-        <div class="logo">Auvian<span></span></div>
-
-        <div class="main-content">
-          <p class="eyebrow anim-eyebrow">Reparación · Restauración.</p>
-          <h1 class="anim-h1">Recuperamos tecnología<br>Instalamos <em>Confianza.</em></h1>
-          <p class="tagline anim-tagline">Precisión en cada detalle.</p>
-          <div class="cta-row anim-cta">
-            <a href="#" class="cta-btn" id="openModal">Contactar</a>
-            <a href="#" class="cta-btn" id="openServices">Ver servicios</a>
-          </div>
-        </div>
-
-        <div class="bottom-left anim-bottom">
-          <ul class="services-list">
-            <li>Celulares</li>
-            <li>Computadoras</li>
-           
-          </ul>
+      <div class="main-content">
+        <p class="eyebrow anim-eyebrow">Reparación · Restauración.</p>
+        <h1 class="anim-h1">Recuperamos tecnología<br>Instalamos <em>Confianza.</em></h1>
+        <p class="tagline anim-tagline">Precisión en cada detalle.</p>
+        <div class="cta-row anim-cta">
+          <a href="#" class="cta-btn" id="openModal">Contactar</a>
+          <a href="#" class="cta-btn" id="openServices">Ver servicios</a>
         </div>
       </div>
 
-      <div class="divider-line"></div>
+      <div class="bottom-left anim-bottom">
+        <ul class="services-list">
+          <li>Celulares</li>
+          <li>Computadoras</li>
+        </ul>
+      </div>
+    </div>
 
-      <!-- RIGHT -->
-      <div class="right anim-right">
-        <div class="right-bg"></div>
+    <div class="divider-line"></div>
 
-        <div class="geo-lines">
-          <svg viewBox="0 0 600 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-            <path class="animated-path" d="M100 200 L180 200 L180 140 L380 140 L380 200 L500 200" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-            <path class="animated-path" id="p2" d="M60 350 L200 350 L200 420 L420 420 L420 350 L560 350" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"/>
-            <path class="animated-path" id="p3" d="M300 80 L300 720" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-            <path class="animated-path" id="p4" d="M150 500 L150 600 L450 600 L450 500" stroke="rgba(255,255,255,0.13)" stroke-width="1.5"/>
-            <rect class="animated-path" id="p5" x="40" y="40" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
-            <rect class="animated-path" id="p6" x="500" y="700" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
-            <circle class="animated-dot" cx="180" cy="200" r="4" fill="rgba(255,255,255,0.45)"/>
-            <circle class="animated-dot" cx="380" cy="140" r="4" fill="rgba(255,255,255,0.45)"/>
-            <circle class="animated-dot" cx="200" cy="420" r="4" fill="rgba(255,255,255,0.35)"/>
-            <circle class="animated-dot" cx="420" cy="350" r="4" fill="rgba(255,255,255,0.35)"/>
+    <!-- RIGHT -->
+    <div class="right anim-right">
+      <div class="right-bg"></div>
+
+      <div class="geo-lines">
+        <svg viewBox="0 0 600 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <path class="animated-path" d="M100 200 L180 200 L180 140 L380 140 L380 200 L500 200" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+          <path class="animated-path" d="M60 350 L200 350 L200 420 L420 420 L420 350 L560 350" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"/>
+          <path class="animated-path" d="M300 80 L300 720" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <path class="animated-path" d="M150 500 L150 600 L450 600 L450 500" stroke="rgba(255,255,255,0.13)" stroke-width="1.5"/>
+          <rect class="animated-path" x="40" y="40" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+          <rect class="animated-path" x="500" y="700" width="60" height="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+          <circle class="animated-dot" cx="180" cy="200" r="4" fill="rgba(255,255,255,0.45)"/>
+          <circle class="animated-dot" cx="380" cy="140" r="4" fill="rgba(255,255,255,0.45)"/>
+          <circle class="animated-dot" cx="200" cy="420" r="4" fill="rgba(255,255,255,0.35)"/>
+          <circle class="animated-dot" cx="420" cy="350" r="4" fill="rgba(255,255,255,0.35)"/>
+        </svg>
+      </div>
+
+      <div class="device-wrap">
+        <div class="device-icon anim-device">
+          <svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="45" y="10" width="90" height="160" rx="14" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
+            <rect x="55" y="22" width="70" height="116" rx="4" stroke="rgba(255,255,255,0.25)" stroke-width="1" fill="rgba(255,255,255,0.05)"/>
+            <rect x="72" y="152" width="36" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+            <line x1="65" y1="50" x2="115" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+            <line x1="65" y1="62" x2="95" y2="62" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <rect x="65" y="78" width="50" height="36" rx="3" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
+            <path d="M82 88 C80 86 80 82 82 80 L85 83 L88 80 L90 82 L87 85 L90 88 L88 90 L84 90 Z" stroke="rgba(255,255,255,0.55)" stroke-width="1" fill="none"/>
+            <line x1="89" y1="88" x2="96" y2="95" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="65" y1="124" x2="115" y2="124" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+            <line x1="65" y1="132" x2="100" y2="132" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <rect x="5" y="175" width="170" height="105" rx="6" stroke="rgba(255,255,255,0.28)" stroke-width="1" fill="none"/>
+            <rect x="15" y="182" width="150" height="78" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="rgba(255,255,255,0.03)"/>
+            <line x1="15" y1="200" x2="165" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <line x1="15" y1="210" x2="165" y2="210" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+            <rect x="70" y="215" width="40" height="26" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
           </svg>
         </div>
+      </div>
 
-        <div class="device-wrap">
-          <div class="device-icon anim-device">
-            <svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="45" y="10" width="90" height="160" rx="14" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
-              <rect x="55" y="22" width="70" height="116" rx="4" stroke="rgba(255,255,255,0.25)" stroke-width="1" fill="rgba(255,255,255,0.05)"/>
-              <rect x="72" y="152" width="36" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
-              <line x1="65" y1="50" x2="115" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-              <line x1="65" y1="62" x2="95" y2="62" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-              <rect x="65" y="78" width="50" height="36" rx="3" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
-              <path d="M82 88 C80 86 80 82 82 80 L85 83 L88 80 L90 82 L87 85 L90 88 L88 90 L84 90 Z" stroke="rgba(255,255,255,0.55)" stroke-width="1" fill="none"/>
-              <line x1="89" y1="88" x2="96" y2="95" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="65" y1="124" x2="115" y2="124" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-              <line x1="65" y1="132" x2="100" y2="132" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-              <rect x="5" y="175" width="170" height="105" rx="6" stroke="rgba(255,255,255,0.28)" stroke-width="1" fill="none"/>
-              <rect x="15" y="182" width="150" height="78" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="rgba(255,255,255,0.03)"/>
-              <line x1="15" y1="200" x2="165" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-              <line x1="15" y1="210" x2="165" y2="210" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
-              <rect x="70" y="215" width="40" height="26" rx="3" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="corner-label anim-corner">
-          <p>Servicio profesional</p>
-          <p class="highlight">Diagnóstico gratuito</p>
-        </div>
+      <div class="corner-label anim-corner">
+        <p>Servicio profesional</p>
+        <p class="highlight">Diagnóstico gratuito</p>
       </div>
     </div>
-
-    <!-- scroll hint -->
-    <div class="scroll-hint" id="scrollHint">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <path d="M12 5v14M5 12l7 7 7-7" stroke="rgba(100,95,90,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-
   </div>
 
-  <!-- ══════════════ SECTION 2: VIDEO ══════════════ -->
-  <div class="section section-video">
-    <div class="video-wrapper">
-      <video id="mainVideo" src="video.mp4" playsinline muted preload="auto"></video>
-      <video id="reverseVideo" src="invertido.mp4" playsinline muted preload="auto"></video>
-    </div>
+  <!-- scroll hint -->
+  <div class="scroll-hint" id="scrollHint">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5v14M5 12l7 7 7-7" stroke="rgba(100,95,90,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
   </div>
-
 </div>
 
 <!-- ─── CONTACT MODAL ─── -->
 <div class="modal-overlay" id="contactModal">
   <div class="modal">
-    <button class="modal-close" id="modalClose" aria-label="Cerrar">&#10005;</button>
+    <button class="modal-close" id="modalClose">&#10005;</button>
     <p class="modal-eyebrow">Contáctanos</p>
     <h2 class="modal-title">¿Cómo quieres<br>comunicarte?</h2>
     <div class="modal-options">
@@ -707,121 +569,142 @@
 <!-- ─── SERVICES MODAL ─── -->
 <div class="modal-overlay svc-modal" id="servicesModal">
   <div class="modal">
-    <button class="modal-close" id="servicesClose" aria-label="Cerrar">&#10005;</button>
+    <button class="modal-close" id="servicesClose">&#10005;</button>
     <p class="modal-eyebrow">Lo que hacemos</p>
     <h2 class="modal-title">Nuestros<br>servicios.</h2>
-
     <div class="svc-section">
       <p class="svc-section-title">Celulares</p>
       <div class="svc-grid">
-        <div class="svc-item">
-          <span class="svc-item-icon">📱</span>
-          <div class="svc-item-text"><strong>Cambio de pantalla</strong>Rotura, manchas o táctil sin respuesta</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🔋</span>
-          <div class="svc-item-text"><strong>Cambio de batería</strong>Batería que no carga o dura poco</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🔌</span>
-          <div class="svc-item-text"><strong>Puerto de carga</strong>No carga o carga intermitente</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🔇</span>
-          <div class="svc-item-text"><strong>Bocina / micrófono</strong>Sin sonido o no se escucha al hablar</div>
-        </div>
+        <div class="svc-item"><span class="svc-item-icon">📱</span><div class="svc-item-text"><strong>Cambio de pantalla</strong>Rotura, manchas o táctil sin respuesta</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🔋</span><div class="svc-item-text"><strong>Cambio de batería</strong>Batería que no carga o dura poco</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🔌</span><div class="svc-item-text"><strong>Puerto de carga</strong>No carga o carga intermitente</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🔇</span><div class="svc-item-text"><strong>Bocina / micrófono</strong>Sin sonido o no se escucha al hablar</div></div>
       </div>
     </div>
-
     <div class="svc-section">
       <p class="svc-section-title">Computadoras y Laptops</p>
       <div class="svc-grid">
-        <div class="svc-item">
-          <span class="svc-item-icon">🪟</span>
-          <div class="svc-item-text"><strong>Instalación de Windows</strong>Windows 10 u 11 limpio y activado</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">📄</span>
-          <div class="svc-item-text"><strong>Instalación de Office</strong>Word, Excel, PowerPoint y más</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🐌</span>
-          <div class="svc-item-text"><strong>PC lenta</strong>Limpieza, optimización y formateo</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🖥️</span>
-          <div class="svc-item-text"><strong>Cambio de pantalla</strong>Laptop con pantalla rota o sin imagen</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🔋</span>
-          <div class="svc-item-text"><strong>Batería de laptop</strong>No retiene carga o no enciende</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🌡️</span>
-          <div class="svc-item-text"><strong>Sobrecalentamiento</strong>Limpieza de polvo y cambio de pasta térmica</div>
-        </div>
-        <div class="svc-item">
-          <span class="svc-item-icon">🦠</span>
-          <div class="svc-item-text"><strong>Virus y malware</strong>Eliminación y protección del equipo</div>
-        </div>
+        <div class="svc-item"><span class="svc-item-icon">🪟</span><div class="svc-item-text"><strong>Instalación de Windows</strong>Windows 10 u 11 limpio y activado</div></div>
+        <div class="svc-item"><span class="svc-item-icon">📄</span><div class="svc-item-text"><strong>Instalación de Office</strong>Word, Excel, PowerPoint y más</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🐌</span><div class="svc-item-text"><strong>PC lenta</strong>Limpieza, optimización y formateo</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🖥️</span><div class="svc-item-text"><strong>Cambio de pantalla</strong>Laptop con pantalla rota o sin imagen</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🔋</span><div class="svc-item-text"><strong>Batería de laptop</strong>No retiene carga o no enciende</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🌡️</span><div class="svc-item-text"><strong>Sobrecalentamiento</strong>Limpieza de polvo y cambio de pasta térmica</div></div>
+        <div class="svc-item"><span class="svc-item-icon">🦠</span><div class="svc-item-text"><strong>Virus y malware</strong>Eliminación y protección del equipo</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- YouTube IFrame API no longer needed -->
 <script>
-  const mainVideo    = document.getElementById('mainVideo');
-  const reverseVideo = document.getElementById('reverseVideo');
+  const homeSection   = document.getElementById('homeSection');
+  const videoSection  = document.getElementById('videoSection');
+  const mainVideo     = document.getElementById('mainVideo');
+  const reverseVideo  = document.getElementById('reverseVideo');
+  const scrollHint    = document.getElementById('scrollHint');
 
-  // ─── Intersection Observer for section detection ───
-  const sections = document.querySelectorAll('.section');
-  let currentSection = 0;
-  let animationQueued = false;
-  let transitioning = false;
+  // States: 'home' | 'transitioning-to-video' | 'video' | 'transitioning-to-home'
+  let state = 'home';
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const idx = Array.from(sections).indexOf(entry.target);
-      if (idx === currentSection) return;
+  // ─── Show home with animations ───
+  function showHome() {
+    state = 'home';
 
-      const prev = currentSection;
-      currentSection = idx;
+    // Reset videos
+    mainVideo.pause();
+    mainVideo.currentTime = 0;
+    mainVideo.style.display = 'block';
+    reverseVideo.style.display = 'none';
 
-      if (idx === 1) {
-        // ── Scrolled DOWN to video ──
-        reverseVideo.style.display = 'none';
-        mainVideo.style.display    = 'block';
-        mainVideo.currentTime = 0;
-        mainVideo.play();
-      } else if (idx === 0 && prev === 1) {
-        // ── Scrolled UP back to home ──
-        mainVideo.pause();
+    // Fade home section back in
+    homeSection.classList.remove('hidden');
 
-        // Play reverse video, then trigger animations when it ends
-        mainVideo.style.display    = 'none';
-        reverseVideo.style.display = 'block';
-        reverseVideo.currentTime = 0;
-        reverseVideo.play();
+    // Reset scroll hint
+    scrollHint.classList.remove('visible', 'bounce');
 
-        reverseVideo.onended = () => {
-          reverseVideo.style.display = 'none';
-          // Scroll back to home section
-          document.getElementById('scroller').scrollTo({ top: 0, behavior: 'smooth' });
-          if (!animationQueued) {
-            animationQueued = true;
-            setTimeout(() => {
-              triggerAnimations();
-              animationQueued = false;
-            }, 450);
-          }
-        };
-      }
-    });
-  }, { threshold: 0.6 });
+    // Trigger animations
+    triggerAnimations();
 
-  sections.forEach(s => observer.observe(s));
+    // Re-show scroll hint after animations settle
+    setTimeout(() => {
+      scrollHint.classList.add('visible');
+      setTimeout(() => scrollHint.classList.add('bounce'), 1000);
+    }, 2200);
+  }
+
+  // ─── Go to video ───
+  function goToVideo() {
+    if (state !== 'home') return;
+    state = 'transitioning-to-video';
+
+    // Fade out home
+    homeSection.classList.add('hidden');
+
+    setTimeout(() => {
+      state = 'video';
+      // Start main video
+      reverseVideo.style.display = 'none';
+      mainVideo.style.display = 'block';
+      mainVideo.currentTime = 0;
+      mainVideo.play();
+    }, 500);
+  }
+
+  // ─── Go back home (play reverse first) ───
+  function goToHome() {
+    if (state !== 'video') return;
+    state = 'transitioning-to-home';
+
+    mainVideo.pause();
+
+    // Play reverse video over the video section
+    mainVideo.style.display = 'none';
+    reverseVideo.style.display = 'block';
+    reverseVideo.currentTime = 0;
+    reverseVideo.play();
+
+    reverseVideo.onended = () => {
+      reverseVideo.style.display = 'none';
+      showHome();
+    };
+  }
+
+  // ─── Wheel / touch scroll detection ───
+  let lastScrollTime = 0;
+  const SCROLL_COOLDOWN = 800;
+
+  function handleScrollDown() {
+    const now = Date.now();
+    if (now - lastScrollTime < SCROLL_COOLDOWN) return;
+    lastScrollTime = now;
+    if (state === 'home') goToVideo();
+  }
+
+  function handleScrollUp() {
+    const now = Date.now();
+    if (now - lastScrollTime < SCROLL_COOLDOWN) return;
+    lastScrollTime = now;
+    if (state === 'video') goToHome();
+  }
+
+  // Mouse wheel
+  window.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0) handleScrollDown();
+    else if (e.deltaY < 0) handleScrollUp();
+  }, { passive: true });
+
+  // Touch swipe
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) < 40) return;
+    if (dy > 0) handleScrollDown();
+    else handleScrollUp();
+  }, { passive: true });
 
   // ─── Animation system ───
   function triggerAnimations() {
@@ -836,43 +719,41 @@
     });
 
     document.querySelectorAll('.animated-path').forEach(p => p.classList.remove('playing'));
-
     document.querySelectorAll('.animated-dot').forEach(d => {
       d.style.transition = 'none';
       d.style.opacity = '0';
     });
 
-    void document.querySelector('.section-home').offsetHeight;
+    void homeSection.offsetHeight;
 
     requestAnimationFrame(() => {
       animClasses.forEach(cls => {
         const el = document.querySelector(cls);
         if (el) el.classList.add('playing');
       });
-
       document.querySelectorAll('.animated-path').forEach(p => p.classList.add('playing'));
 
       const dots = document.querySelectorAll('.animated-dot');
-      const delays = [1500, 1700, 1900, 2100];
-      dots.forEach((d, i) => {
+      [1500, 1700, 1900, 2100].forEach((delay, i) => {
         setTimeout(() => {
-          d.style.transition = '';
-          d.style.opacity = '1';
-        }, delays[i]);
+          dots[i].style.transition = '';
+          dots[i].style.opacity = '1';
+        }, delay);
       });
     });
   }
 
   // ─── First load ───
   window.addEventListener('load', () => {
-    currentSection = 0;
     triggerAnimations();
+    setTimeout(() => {
+      scrollHint.classList.add('visible');
+      setTimeout(() => scrollHint.classList.add('bounce'), 1000);
+    }, 2200);
   });
 
-  // ─── Scroll hint ───
-  document.getElementById('scrollHint').addEventListener('click', () => {
-    document.getElementById('scroller').scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-  });
+  // Scroll hint click
+  scrollHint.addEventListener('click', goToVideo);
 
   // ─── Modals ───
   const modal = document.getElementById('contactModal');
@@ -894,4 +775,3 @@
 </script>
 </body>
 </html>
-
