@@ -462,25 +462,56 @@
 <!-- ─── AUDIO ─── -->
 <audio id="bgAudio" src="logo.mp3" preload="auto"></audio>
 
-<!-- ─── TAP OVERLAY ─── -->
-<div id="tapOverlay" style="
+<!-- ─── ENTRY SCREEN ─── -->
+<div id="entryScreen" style="
   position: fixed; inset: 0; z-index: 500;
-  display: flex; align-items: center; justify-content: center;
+  background: #1a1917;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 48px;
   cursor: pointer;
+  transition: opacity 0.8s ease;
 ">
+  <!-- Logo -->
+  <div style="text-align:center">
+    <p style="
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2.2rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: #f7f7f5;
+      margin-bottom: 12px;
+    ">Auvian</p>
+    <p style="
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(155,150,144,0.6);
+    ">Precisión en cada detalle.</p>
+  </div>
+
+  <!-- Pulse dot -->
+  <div style="
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, transparent, rgba(155,150,144,0.4), transparent);
+  "></div>
+
+  <!-- Enter text -->
   <p style="
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.45em;
+    font-size: 0.58rem;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: rgba(155,150,144,0.55);
-    animation: tapPulse 2.4s ease-in-out infinite;
-  ">· toca para continuar ·</p>
+    color: rgba(155,150,144,0.5);
+    animation: entryPulse 2.2s ease-in-out infinite;
+  ">· entrar ·</p>
 </div>
 
 <style>
-  @keyframes tapPulse {
-    0%, 100% { opacity: 0.4; }
+  @keyframes entryPulse {
+    0%, 100% { opacity: 0.35; }
     50%       { opacity: 1; }
   }
 </style>
@@ -663,35 +694,37 @@
 </div>
 
 <script>
-  // ─── AUDIO + TAP OVERLAY ───
-  const bgAudio    = document.getElementById('bgAudio');
-  const soundBtn   = document.getElementById('soundBtn');
-  const iconOn     = document.getElementById('iconOn');
-  const iconOff    = document.getElementById('iconOff');
-  const tapOverlay = document.getElementById('tapOverlay');
+  // ─── AUDIO + ENTRY SCREEN ───
+  const bgAudio     = document.getElementById('bgAudio');
+  const soundBtn    = document.getElementById('soundBtn');
+  const iconOn      = document.getElementById('iconOn');
+  const iconOff     = document.getElementById('iconOff');
+  const entryScreen = document.getElementById('entryScreen');
   let muted = false;
 
-  // Hide overlay and start audio on first tap anywhere
-  tapOverlay.addEventListener('click', () => {
-    // Fade out overlay
-    tapOverlay.style.transition = 'opacity 0.6s ease';
-    tapOverlay.style.opacity = '0';
-    setTimeout(() => tapOverlay.style.display = 'none', 600);
+  entryScreen.addEventListener('click', () => {
+    // Fade out entry screen
+    entryScreen.style.opacity = '0';
+    setTimeout(() => entryScreen.style.display = 'none', 800);
 
     // Play audio with fade-in
     bgAudio.volume = 0;
     bgAudio.play().then(() => {
       let vol = 0;
       const fadeIn = setInterval(() => {
-        vol = Math.min(vol + 0.05, 0.85);
+        vol = Math.min(vol + 0.04, 0.85);
         bgAudio.volume = vol;
         if (vol >= 0.85) clearInterval(fadeIn);
       }, 60);
     }).catch(() => {});
+
+    // Trigger page animations
+    triggerAnimations();
   });
 
   // Sound toggle button
-  soundBtn.addEventListener('click', () => {
+  soundBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     muted = !muted;
     bgAudio.muted = muted;
     iconOn.style.display  = muted ? 'none'  : 'block';
@@ -782,11 +815,8 @@
     });
   }
 
-  // ─── First load ───
-  window.addEventListener('load', () => {
-    currentSection = 0;
-    triggerAnimations();
-  });
+  // ─── First load — animations wait for entry screen ───
+  // (triggerAnimations is called when user clicks entryScreen)
 
   // ─── Scroll hint ───
   document.getElementById('scrollHint').addEventListener('click', () => {
